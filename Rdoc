@@ -16,7 +16,17 @@ spec <- matrix(c(
 ##     1 = required argument
 ##     2 = optional argument
 
-usage <- function(specs){}
-
+## Parse command line
 opt <- getopt(spec)
 
+## Display usage if needed (no params specified at cli)
+usage <- function(specs){
+    specs
+    cat('Hello usage world\n')
+}
+if(1 == length(opt)){
+    usage(spec)
+    q(status = 1)
+}
+
+print(opt)
