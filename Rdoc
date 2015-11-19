@@ -1,9 +1,22 @@
 #!/usr/bin/Rscript --vanilla --quiet
 
-library(optparse)
+library(getopt)
 
-c('-h', '--help')
-c('-a', '--apropos')
-c('-a', '--sos')
+spec <- matrix(c(
+    #long            short   req(*)  type        
+    'help' ,         'h',    1,      'character',
+    'help-search' ,  'H',    1,      'character',
+    'apropos',       'a',    1,      'character',
+    'vignette',      'v',    1,      'character',
+    'sos',           's',    1,      'character'
+    ), byrow=TRUE, ncol=4)
 
-opt <- parse_args(OptionParser(option_list))
+## (*) required arg:
+##     0 = no argument
+##     1 = required argument
+##     2 = optional argument
+
+usage <- function(specs){}
+
+opt <- getopt(spec)
+
