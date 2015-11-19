@@ -1,0 +1,9 @@
+#!/usr/bin/Rscript --vanilla --quiet
+
+library(optparse)
+
+c('-h', '--help')
+c('-a', '--apropos')
+c('-a', '--sos')
+
+opt <- parse_args(OptionParser(option_list))
