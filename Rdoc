@@ -16,7 +16,7 @@ Usage:
 
 Rdoc_quit <- function(){
     usage()
-    quit(save = 'no', status =1)
+    quit(save = 'no', status = 1)
 }
 
 if(0L == length(args)){
@@ -27,20 +27,27 @@ if(0L == length(args)){
 ## Helpers
 ## --------
 
+
 Help <- function(args){
-    if(length(args) > 1)
+    if (length(args) > 1)
         Rdoc_quit()
-    splitted <- strsplit(args, '::')
-             
-    help(topic = help_topic,
-         package = help_package,
+    splitted <- strsplit(args, '::')[[1]]
+    if (length(splitted) == 1L){
+        help_topic <- splitted
+        help_package <- NULL
+    } else if (length(splitted) == 2L) {
+        help_package <- splitted[1]
+        help_topic <- splitted[2]
+    } else {
+        Rdoc_quit()
+    }
+    help(topic =   (help_topic),   # see ?help on why (), searching pkg_ref
+         package = (help_package), # see ?help on why (), searching pkg_ref
          lib.loc = NULL,
          verbose = FALSE,
          try.all.packages = getOption('help.try.all.packages'),
          help_type = getOption('help_type', 'text'))
 }
-
-
 
 
 ## -----
@@ -56,5 +63,5 @@ if ('-hs' == args[1]) {
 } else if ('-s' == args[1]){
     SOS(args[-1])
 } else {
-    Help(args[-1])
+    Help(args)
 }
