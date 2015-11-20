@@ -5,9 +5,9 @@ arg <- commandArgs(trailingOnly = TRUE)
 usage <- function(){cat('
 Usage:
 
-   Rdoc string              - Use help
-   Rdoc -a string           - Use apropos
+   Rdoc string [-t type]    - Use help (type can be text and/or pdf)
    Rdoc -v [string]         - Use vignette
+   Rdoc -a string           - Use apropos
    Rdoc -s string           - Use sos::findFn
 
 ')
@@ -136,12 +136,14 @@ Vignette <- function(arg){
 ## Main
 ## -----
 
-if ('-a' == arg[1]){
-    Apropos(arg[-1])
-} else if ('-v' == arg[1]){
+
+
+if ('-v' == arg[1]){
     Vignette(arg[-1])
 } else if ('-s' == arg[1]){
     SOS(arg[-1])
+} else if ('-a' == arg[1]){
+    Apropos(arg[-1])
 ## } else if ('-hs' == arg[1]) {
 ##     Help.search(arg[-1])
 } else {
