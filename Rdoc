@@ -13,8 +13,14 @@ Usage:
 ')
 }
 
-## Rdoc read.csv car::recode -t text pdf
-## Rdoc -v grid data.table::datatable-faq
+## ## Example
+## 'Rdoc read.csv car::recode -t text pdf'
+## 'Rdoc -v grid data.table::datatable-faq'
+
+## ## TODO
+## 'Rdoc help -t html'
+## 'Rdoc -v DT'
+
 
 Rdoc_quit <- function(){
     usage()
@@ -51,7 +57,7 @@ process_help_args <- function(arg){
     ## part as 'function' or 'package::function' and keep the right part as
     ## common type. Return a list
 
-    allowed_types <- c('text', 'pdf')
+    allowed_types <- c('text', 'pdf', 'html')
 
     ## Type:
     ## 1 - find the first occurrence of -t, save what to the left and then
@@ -70,9 +76,6 @@ process_help_args <- function(arg){
         type <- allowed_types[allowed_types %in% right]
     }
 
-    type[!(type %in% allowed_types)] <- allowed_types[1]
-    type <- unique(type)
-
     ## help args without type
     help_args <- lapply(arg, pkg_function_splitter)
     ## add the format at the end
@@ -86,14 +89,24 @@ Help <- function(arg){
 
     display_help <- function(x){
         lapply(x, function(x) {
-            ## see ?help on why (), searching pkg_ref
-            help(topic   = (x[2]),
-                 package = (if (x[1] == 'NULL') NULL else x[1]),
-                 lib.loc = NULL,
-                 verbose = FALSE,
-                 try.all.packages = getOption('help.try.all.packages'),
-                 help_type = (x[3])
-                 )
+            ## if html search for the static doc file and open it
+            package   <- x[1]
+            topic     <- x[2]
+            help_type <- x[3]
+            if (help_type == 'html'){
+                'Search static html help'
+                ## browseUrl
+            } else  {
+                ## Otherwise go with classic help
+                ## see ?help on why (), searching pkg_ref
+                help(topic   = (topic),
+                     package = (if (package == 'NULL') NULL else package),
+                     lib.loc = NULL,
+                     verbose = FALSE,
+                     try.all.packages = getOption('help.try.all.packages'),
+                     help_type = (help_type)
+                     )
+            }
         })
     }
 
@@ -120,8 +133,10 @@ Vignette <- function(arg){
         vignette_args <- preprocess_vignette_args(arg)
 
         display_vignette <- function(x){
-            vignette(topic   = (x[2]),
-                     package = (if (x[1] == 'NULL') NULL else x[1]))
+            package <- x[1]
+            topic <- x[2]
+            vignette(topic   = (topic),
+                     package = (if (package == 'NULL') NULL else package))
         }
 
         lapply(vignette_args, display_vignette)
@@ -135,9 +150,7 @@ Vignette <- function(arg){
 ## -----
 ## Main
 ## -----
-
-
-
+capture.output(
 if ('-v' == arg[1]){
     Vignette(arg[-1])
 } else if ('-s' == arg[1]){
@@ -148,4 +161,4 @@ if ('-v' == arg[1]){
 ##     Help.search(arg[-1])
 } else {
     Help(arg)
-}
+}, type = 'output', file = tempfile())
