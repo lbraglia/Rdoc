@@ -1,15 +1,19 @@
 # Rdoc
 
-Experiments with R documentation access from command line
+Since sometimes I want to access R documentation from Linux command line,
+here is a small Rscript to do that:
 
 ```
 Usage:
 
-   Rdoc string              - Use help
-   Rdoc package::string     - Use help
-   Rdoc -hs string          - Use help.search
-   Rdoc -a string           - Use apropos
-   Rdoc -v [string]         - Use vignette
-   Rdoc -s string           - Use sos::findFn
+   Rdoc strings [-t type]    - Use help (type can be text and/or pdf)
+   Rdoc -v [strings]         - Use vignette
 
+Examples:
+
+   Rdoc read.csv car::recode -t text pdf    # no html doc
+   Rdoc -v grid data.table::datatable-faq   # two pdf vignette
+   Rdoc -v DT                               # html vignette ok too
+   
 ```
+

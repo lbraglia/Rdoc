@@ -5,10 +5,8 @@ arg <- commandArgs(trailingOnly = TRUE)
 usage <- function(){cat('
 Usage:
 
-   Rdoc string [-t type]    - Use help (type can be text and/or pdf)
-   Rdoc -v [string]         - Use vignette
-   Rdoc -a string           - Use apropos
-   Rdoc -s string           - Use sos::findFn
+   Rdoc strings [-t type]    - Use help (type can be text and/or pdf)
+   Rdoc -v [strings]         - Use vignette
 
 ')
 }
@@ -142,21 +140,38 @@ Vignette <- function(arg){
     }
 }
 
-
-
-
 ## -----
 ## Main
 ## -----
-capture.output(
+#capture.output(
 if ('-v' == arg[1]){
     Vignette(arg[-1])
-} else if ('-s' == arg[1]){
-    SOS(arg[-1])
-} else if ('-a' == arg[1]){
-    Apropos(arg[-1])
+## } else if ('-s' == arg[1]){
+##     SOS(arg[-1])
 ## } else if ('-hs' == arg[1]) {
 ##     Help.search(arg[-1])
 } else {
     Help(arg)
-}, type = 'output', file = tempfile())
+}#, type = 'output', file = tempfile())
+
+
+
+## ----------------------
+## SOS (and its helpers)
+## ----------------------
+
+## SOS <- function(arg) {
+    
+##     RSiteSearch(paste0('{', paste(arg, collapse = ' '), '}'),
+##                 restrict = 'functions', # somewhat similar to sos
+##                 format = 'short',
+##                 sortby = 'score',
+##                 matchesPerPage = 100)
+                
+    ## suppressPackageStartupMessages(
+    ## if (!require('sos')){
+    ##     install.package('sos')
+    ## } else {
+    ##     sos::findFn(string = paste(arg, collapse = ' '))
+    ## })
+## }
