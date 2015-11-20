@@ -98,7 +98,6 @@ Help <- function(arg){
                  )
         })
     }
-
     lapply(help_args, display_help)
 }
 
@@ -127,7 +126,8 @@ Vignette <- function(arg){
             })
 
             if (any(html_vignettes != '')){
-                lapply(html_vignettes, function(x) if (x != '') browseURL(x))
+                lapply(html_vignettes, function(x)
+                    if (x != '') browseURL(x))
             } else {
                 vignette(topic   = (topic),
                          package = (if (package == 'NULL') NULL
@@ -136,7 +136,6 @@ Vignette <- function(arg){
         }
 
         lapply(vignette_args, display_vignette)
-
     }
 }
 
