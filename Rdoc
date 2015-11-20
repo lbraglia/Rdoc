@@ -1,32 +1,60 @@
 #!/usr/bin/Rscript --vanilla --quiet
 
-library(getopt)
+args <- commandArgs(trailingOnly = TRUE)
 
-spec <- matrix(c(
-    #long            short   req(*)  type        
-    'help' ,         'h',    1,      'character',
-    'help-search' ,  'H',    1,      'character',
-    'apropos',       'a',    1,      'character',
-    'vignette',      'v',    1,      'character',
-    'sos',           's',    1,      'character'
-    ), byrow=TRUE, ncol=4)
+usage <- function(){cat('
+Usage:
 
-## (*) required arg:
-##     0 = no argument
-##     1 = required argument
-##     2 = optional argument
+   Rdoc string              - help
+   Rdoc -hs string          - help.search
+   Rdoc -a string           - apropos
+   Rdoc -v [string]         - vignette
+   Rdoc -s string           - use sos::findFn
 
-## Parse command line
-opt <- getopt(spec)
-
-## Display usage if needed (no params specified at cli)
-usage <- function(specs){
-    specs
-    cat('Hello usage world\n')
-}
-if(1 == length(opt)){
-    usage(spec)
-    q(status = 1)
+')
 }
 
-print(opt)
+Rdoc_quit <- function(){
+    usage()
+    quit(save = 'no', status =1)
+}
+
+if(0L == length(args)){
+    Rdoc_quit()
+}
+
+## --------
+## Helpers
+## --------
+
+Help <- function(args){
+    if(length(args) > 1)
+        Rdoc_quit()
+    splitted <- strsplit(args, '::')
+             
+    help(topic = help_topic,
+         package = help_package,
+         lib.loc = NULL,
+         verbose = FALSE,
+         try.all.packages = getOption('help.try.all.packages'),
+         help_type = getOption('help_type', 'text'))
+}
+
+
+
+
+## -----
+## Main
+## -----
+
+if ('-hs' == args[1]) {
+    Help.search(args[-1])
+} else if ('-a' == args[1]){
+    Apropos(args[-1])
+} else if ('-v' == args[1]){
+    Vignette(args[-1])
+} else if ('-s' == args[1]){
+    SOS(args[-1])
+} else {
+    Help(args[-1])
+}
