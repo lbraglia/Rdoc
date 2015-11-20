@@ -16,11 +16,7 @@ Usage:
 ## ## Example
 ## 'Rdoc read.csv car::recode -t text pdf'
 ## 'Rdoc -v grid data.table::datatable-faq'
-
-## ## TODO
-## 'Rdoc help -t html'
-## 'Rdoc -v DT'
-
+## 'Rdoc -v DT grid::grid'
 
 Rdoc_quit <- function(){
     usage()
@@ -57,7 +53,7 @@ process_help_args <- function(arg){
     ## part as 'function' or 'package::function' and keep the right part as
     ## common type. Return a list
 
-    allowed_types <- c('text', 'pdf', 'html')
+    allowed_types <- c('text', 'pdf')
 
     ## Type:
     ## 1 - find the first occurrence of -t, save what to the left and then
@@ -93,29 +89,20 @@ Help <- function(arg){
             package   <- x[1]
             topic     <- x[2]
             help_type <- x[3]
-            if (help_type == 'html'){
-                'Search static html help'
-                ## browseUrl
-            } else  {
-                ## Otherwise go with classic help
-                ## see ?help on why (), searching pkg_ref
-                help(topic   = (topic),
-                     package = (if (package == 'NULL') NULL else package),
-                     lib.loc = NULL,
-                     verbose = FALSE,
-                     try.all.packages = getOption('help.try.all.packages'),
-                     help_type = (help_type)
-                     )
-            }
+            ## Otherwise go with classic help
+            ## see ?help on why (), searching pkg_ref
+            help(topic   = (topic),
+                 package = (if (package == 'NULL') NULL else package),
+                 lib.loc = NULL,
+                 verbose = FALSE,
+                 try.all.packages = getOption('help.try.all.packages'),
+                 help_type = (help_type)
+                 )
         })
     }
 
     lapply(help_args, display_help)
 }
-
-## -----------------------------
-## Help.search (and its helpers)
-## -----------------------------
 
 ## ---------------------------
 ## Vignette (and its helpers)
@@ -134,9 +121,20 @@ Vignette <- function(arg){
 
         display_vignette <- function(x){
             package <- x[1]
-            topic <- x[2]
-            vignette(topic   = (topic),
-                     package = (if (package == 'NULL') NULL else package))
+            topic   <- x[2]
+            ## check for html vignettes
+            all_packages <- rownames(installed.packages())
+            html_vignettes <- lapply(all_packages, function(x) {
+                system.file(sprintf('doc/%s.html', topic), package = x)
+            })
+
+            if (any(html_vignettes != '')){
+                lapply(html_vignettes, function(x) if (x != '') browseURL(x))
+            } else {
+                vignette(topic   = (topic),
+                         package = (if (package == 'NULL') NULL
+                                    else package))
+            }
         }
 
         lapply(vignette_args, display_vignette)
