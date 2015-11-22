@@ -121,11 +121,12 @@ Vignette <- function(arg){
             topic   <- x[2]
             ## check for html vignettes
             all_packages <- rownames(installed.packages())
-            html_vignettes <- lapply(all_packages, function(x) {
+            html_vignettes <- unlist(lapply(all_packages, function(x) {
                 system.file(sprintf('doc/%s.html', topic), package = x)
-            })
+            }))
 
-            if (any(html_vignettes != '')){
+            html_vignettes <- html_vignettes[html_vignettes != '']
+            if (length(html_vignettes) > 0){
                 lapply(html_vignettes, function(x)
                     if (x != '') browseURL(x))
             } else {
