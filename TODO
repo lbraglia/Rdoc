@@ -1,3 +1,5 @@
+utils::browseVignette
+
 utils::RShowDoc('NEWS', type = 'txt')
 utils::RShowDoc("NEWS", package = "MASS")
 
