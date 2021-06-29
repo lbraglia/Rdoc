@@ -11,5 +11,3 @@ utils::RShowDoc('R-ints')
 utils::RShowDoc('R-lang')
 utils::RShowDoc('FAQ', type = 'pdf')
 utils::RShowDoc('FAQ', type = 'txt')
-
-
